@@ -25,22 +25,39 @@ $("#submit").on("click", function(event){
   event.preventDefault();
 
   trainName = $("#train-name").val().trim();
-  trainTime = $("#start-time").val().trim();
   destination = $("#destination").val().trim();
-  frequency = $("#frequency").val().trim();
 
+  trainTime = $("#start-time").val().trim();
+  frequency = $("#frequency").val().trim();
 
   database.ref().push({
     trainName: trainName,
     trainTime: trainTime,
     destination: destination,
     frequency: frequency,
+    minutesAway: minutesAway,
+    nextArrival: nextArrival,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 });
 
 //function to call the data from firebase and input into html
 database.ref().on("child_added", function(childSnapshot){
+
+  
+  var trainTimeConverted = moment(trainTime, "hh:mm").subtract(1,"years");
+
+  var currentTime = moment();
+
+  var diffTime = moment().diff(moment(trainTimeConverted), "minutes");
+
+  var tRemainder = diffTime % frequency;
+
+  var minutesAway = frequency - tRemainder;
+
+  var nextArrival = moment().add(minutesAway, "minutes");
+
+
 
   var generateRow = $("<tr>");
 
@@ -77,6 +94,8 @@ database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", functi
   
   $("#add-employee").append(generateRow);
 });
+
+
 
 
 
