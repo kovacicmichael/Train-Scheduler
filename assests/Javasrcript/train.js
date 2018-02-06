@@ -27,7 +27,7 @@ $("#submit").on("click", function(event){
   trainName = $("#train-name").val().trim();
   destination = $("#destination").val().trim();
 
-  trainTime = $("#start-time").val().trim();
+  trainTime = moment($("#start-time").val().trim(), "hh:mm").format("X");
   frequency = $("#frequency").val().trim();
 
   database.ref().push({
@@ -46,6 +46,7 @@ database.ref().on("child_added", function(childSnapshot){
 
   
   var trainTimeConverted = moment(trainTime, "hh:mm").subtract(1,"years");
+  console.log(trainTimeConverted);
 
   var currentTime = moment();
 
@@ -55,7 +56,7 @@ database.ref().on("child_added", function(childSnapshot){
 
   var minutesAway = frequency - tRemainder;
 
-  var nextArrival = moment().add(minutesAway, "minutes");
+  var nextArrival = moment().add(minutesAway, "minutes").format("hh:mma");
 
 
 
@@ -69,9 +70,9 @@ database.ref().on("child_added", function(childSnapshot){
 
   $(".train-sect").append(generateRow);
 
-  console.log(childSnapshot.val().trainName);
-  console.log(childSnapshot.val().destination);
-  console.log(childSnapshot.val().frequency);
+  // console.log(childSnapshot.val().trainName);
+  // console.log(childSnapshot.val().destination);
+  // console.log(childSnapshot.val().frequency);
 
   //this clears the values in the form
   $("#train-name").val("");
