@@ -14,7 +14,7 @@ var database = firebase.database();
 
 
 var trainName = "";
-var trainTime = "";
+var trainTime;
 var destination = "";
 var frequency = "";
 var nextArrival = 0;
@@ -35,14 +35,18 @@ $("#submit").on("click", function(event){
     trainTime: trainTime,
     destination: destination,
     frequency: frequency,
-    minutesAway: minutesAway,
-    nextArrival: nextArrival,
+    // minutesAway: minutesAway,
+    // nextArrival: nextArrival,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 });
 
 //function to call the data from firebase and input into html
 database.ref().on("child_added", function(childSnapshot){
+
+  var frequency = childSnapshot.val().frequency;
+  var trainTime = childSnapshot.val().trainTime;
+  
 
   
   var trainTimeConverted = moment(trainTime, "hh:mm").subtract(1,"years");
