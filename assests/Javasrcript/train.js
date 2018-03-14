@@ -35,8 +35,6 @@ $("#submit").on("click", function(event){
     trainTime: trainTime,
     destination: destination,
     frequency: frequency,
-    // minutesAway: minutesAway,
-    // nextArrival: nextArrival,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 });
@@ -50,7 +48,7 @@ database.ref().on("child_added", function(childSnapshot){
 
   
   var trainTimeConverted = moment(trainTime, "hh:mm").subtract(1,"years");
-  console.log(trainTimeConverted);
+  //console.log(trainTimeConverted);
 
   var currentTime = moment();
 
@@ -69,8 +67,8 @@ database.ref().on("child_added", function(childSnapshot){
   generateRow.html("<td>" + childSnapshot.val().trainName + "</td>" + 
     "<td>" + childSnapshot.val().destination + "</td>" + 
     "<td>" + childSnapshot.val().frequency + "</td>" + 
-    "<td>" + nextArrival + "</td>" + 
-    "<td>" + minutesAway + "</td>");
+    "<td id=nextArrival>" + nextArrival + "</td>" + 
+    "<td id=minutesAway>" + minutesAway + "</td>");
 
   $(".train-sect").append(generateRow);
 
@@ -83,6 +81,8 @@ database.ref().on("child_added", function(childSnapshot){
   $("#start-time").val("");
   $("#destination").val("");
   $("#frequency").val("");
+
+  update(frequency, trainTime)
 
 }, function(errorObject) {
       console.log("Errors handled: " + errorObject.code);
@@ -101,6 +101,63 @@ database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", functi
 });
 
 
+// var momentOne = moment().format("h:mm:ss");
+// console.log(momentOne);
+
+var datetime = null,
+        date = null;
+
+var update = function (frequency, trainTime) {
+    date = moment(new Date()).format("h:mm:ss")
+    $("#currentTime").text(date)
+
+    var refresh = moment().format("ss");
+   
+   if(refresh == 00){
+      location.reload();
+      // var frequency = frequency;
+      // var trainTime = trainTime;
+      
+
+      
+      // var trainTimeConverted = moment(trainTime, "hh:mm").subtract(1,"years");
+      // //console.log(trainTimeConverted);
+
+      // var currentTime = moment();
+
+      // var diffTime = moment().diff(moment(trainTimeConverted), "minutes");
+
+      // var tRemainder = diffTime % frequency;
+
+      // var minutesAway = frequency - tRemainder;
+
+      // var nextArrival = moment().add(minutesAway, "minutes").format("hh:mma");
+
+      // $("#nextArrival").text(nextArrival);
+      // $("#minutesAway").text(minutesAway);
+
+
+   }
+    
+};
+
+$(document).ready(function(){
+    datetime = $('#datetime')
+    update();
+    setInterval(update, 1000);
+
+
+
+      // $.ajax({
+      //   url: "https://trainschedule-7ac28.firebaseio.com/",
+      //   method: "GET"
+      //   }).then(function(results){
+      //     console.log("results: " + results);
+      //     console.log(status);
+      // })
+
+
+});
 
 
 
